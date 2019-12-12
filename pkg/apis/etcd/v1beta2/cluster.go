@@ -97,6 +97,9 @@ type ClusterSpec struct {
 	// Updating Pod does not take effect on any existing etcd pods.
 	Pod *PodPolicy `json:"pod,omitempty"`
 
+	// Svc defines service policy for services owned by etcd operator.
+	Svc *ServicePolicy `json:"svc,omitempty"`
+
 	// etcd cluster TLS configuration
 	TLS *TLSPolicy `json:"TLS,omitempty"`
 }
@@ -162,6 +165,12 @@ type PodPolicy struct {
 	// '.cluster.local'.
 	// The default is to not set a cluster domain explicitly.
 	ClusterDomain string `json:"ClusterDomain"`
+}
+
+// ServicePolicy defines the policy for services owned by etcd operator.
+type ServicePolicy struct {
+	// Headless to indicate if ClusterIP is set to None
+	Headless bool `json:"Headless,omitempty"`
 }
 
 // TODO: move this to initializer

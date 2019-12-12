@@ -152,14 +152,18 @@ func PodWithNodeSelector(p *v1.Pod, ns map[string]string) *v1.Pod {
 	return p
 }
 
-func CreateClientService(kubecli kubernetes.Interface, clusterName, ns string, owner metav1.OwnerReference) error {
+func CreateClientService(kubecli kubernetes.Interface, clusterName, ns string, headless bool, owner metav1.OwnerReference) error {
 	ports := []v1.ServicePort{{
 		Name:       "client",
 		Port:       EtcdClientPort,
 		TargetPort: intstr.FromInt(EtcdClientPort),
 		Protocol:   v1.ProtocolTCP,
 	}}
-	return createService(kubecli, ClientServiceName(clusterName), clusterName, ns, "", ports, owner, false)
+	var clusterIp string
+	if headless {
+		clusterIp = "None"
+	}
+	return createService(kubecli, ClientServiceName(clusterName), clusterName, ns, clusterIp, ports, owner, false)
 }
 
 func ClientServiceName(clusterName string) string {

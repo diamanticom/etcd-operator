@@ -354,7 +354,12 @@ func (c *Cluster) Update(cl *api.EtcdCluster) {
 }
 
 func (c *Cluster) setupServices() error {
-	err := k8sutil.CreateClientService(c.config.KubeCli, c.cluster.Name, c.cluster.Namespace, c.cluster.AsOwner())
+	err := k8sutil.CreateClientService(
+		c.config.KubeCli,
+		c.cluster.Name,
+		c.cluster.Namespace,
+		c.cluster.Spec.Svc.Headless,
+		c.cluster.AsOwner())
 	if err != nil {
 		return err
 	}

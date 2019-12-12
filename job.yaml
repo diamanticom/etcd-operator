@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: etcd-version-check
+spec:
+  template:
+    spec:
+      containers:
+      - name: etcd-version-check
+        image: docker.io/byrnedo/alpine-curl
+        args: ["http://example-etcd-cluster-client:2379/version"]
+      restartPolicy: Never
+  backoffLimit: 4
