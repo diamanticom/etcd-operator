@@ -5,6 +5,8 @@ if ! which podman > /dev/null; then
 	exit 1
 fi
 
+export IMAGE="quay.io/sdeoras/etcd-operator"
+
 : ${IMAGE:?"Need to set IMAGE, e.g. gcr.io/coreos-k8s-scale-testing/etcd-operator"}
 
 echo "building container..."

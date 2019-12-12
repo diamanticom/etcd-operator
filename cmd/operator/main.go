@@ -110,6 +110,7 @@ func main() {
 		namespace,
 		"etcd-operator",
 		kubecli.CoreV1(),
+		nil,
 		resourcelock.ResourceLockConfig{
 			Identity:      id,
 			EventRecorder: createRecorder(kubecli, name, namespace),
@@ -224,6 +225,6 @@ func startChaos(ctx context.Context, kubecli kubernetes.Interface, ns string, ch
 func createRecorder(kubecli kubernetes.Interface, name, namespace string) record.EventRecorder {
 	eventBroadcaster := record.NewBroadcaster()
 	eventBroadcaster.StartLogging(logrus.Infof)
-	eventBroadcaster.StartRecordingToSink(&v1core.EventSinkImpl{Interface: v1core.New(kubecli.Core().RESTClient()).Events(namespace)})
+	eventBroadcaster.StartRecordingToSink(&v1core.EventSinkImpl{Interface: v1core.New(kubecli.CoreV1().RESTClient()).Events(namespace)})
 	return eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: name})
 }
