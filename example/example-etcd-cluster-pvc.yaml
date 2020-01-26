@@ -1,0 +1,30 @@
+apiVersion: "etcd.database.coreos.com/v1beta2"
+kind: "EtcdCluster"
+metadata:
+  name: "example-etcd-cluster"
+  ## Adding this annotation make this cluster managed by clusterwide operators
+  ## namespaced operators ignore it
+  # annotations:
+  #   etcd.database.coreos.com/scope: clusterwide
+spec:
+  size: 3
+  version: "3.2.13"
+  svc:
+    headless: true
+  pod:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: etcd_cluster
+              operator: In
+              values: ["example-etcd-cluster"]
+          topologyKey: kubernetes.io/hostname
+    persistentVolumeClaimSpec:
+      storageClassName: standard
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
